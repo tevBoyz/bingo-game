@@ -13,9 +13,9 @@ export default function Controls({showModal}) {
     const isWinner = checkBingoWin(card, marked);
     if (isWinner) {
       dispatch(endGame('player'));
-      showModal({ visible: true, message: '🎉 Bingo! You win!' });
+      showModal({ visible: true, title: '🎉 Bingo!', message: 'You win!' });
     } else {
-      showModal({ visible: true, message: '❌ Invalid Bingo call. Keep playing!' });
+      alert("No Bingo yet! Keep playing!");
     }
   };
 

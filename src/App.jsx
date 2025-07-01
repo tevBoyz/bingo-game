@@ -51,7 +51,7 @@ const startNewGame = () => {
           console.error("Audio playback failed:", error);
         });
       }
-    }, 3000); // 3 seconds
+    }, 5000); // 5 seconds
 
     return () => clearInterval(interval);
   }, [dispatch, gameStatus]);

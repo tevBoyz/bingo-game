@@ -18,7 +18,7 @@ export default function CalledNumber() {
   if (current === null) {
     return (
       <div className="text-3xl text-gray-600 dark:text-gray-300">
-        ⏳ Waiting for next number...
+        ⏳ Starting...
       </div>
     );
   }
