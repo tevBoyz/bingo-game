@@ -32,14 +32,6 @@ const startNewGame = () => {
 
 
   const [modal, setModal] = useState({ visible: false, message: '' });
-
-  // Generate card on mount
-  // useEffect(() => {
-  //   const card = generateBingoCard();
-  //   dispatch(setPlayerCard(card));
-  //   dispatch(startGame());
-  // }, [dispatch]);
-
   // Call a new number every 5 seconds
   useEffect(() => {
     if (gameStatus !== 'playing') return;
@@ -64,7 +56,7 @@ const startNewGame = () => {
 
 return (
   <div className="relative flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4 gap-6 dark:bg-gray-900">
-    <h1 className="text-3xl font-bold dark:text-white mb-10">🎯 Bingo Game</h1>
+    <h1 className="text-3xl font-bold dark:text-white">Bingo Game 🎯</h1>
 
     <audio ref={audioRef} src="/ding-sound.mp3" preload="auto" />
 
@@ -73,16 +65,17 @@ return (
         onClick={startNewGame}
         className="bg-green-600 text-white px-6 py-3 rounded-lg shadow hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 transition duration-300 flex items-center gap-2"
       >
-        ▶️ Start Game
+        Start
       </button>
     )}
 
     {gameStatus !== 'idle' && (
       <>
         <CalledNumber />
-        <CallHistory />
         <BingoCard />
         <Controls showModal={setModal} />
+        <CallHistory />
+
       </>
     )}
 
