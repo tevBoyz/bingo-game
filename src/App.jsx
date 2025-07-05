@@ -1,11 +1,11 @@
-import React, { useEffect,useRef, useState } from 'react';
+import { useEffect,useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { generateBingoCard } from './utils/generateCard';
 import {
   setPlayerCard,
   startGame,
-  callNextNumber,
-  resetGame,
+  setGameStatus,
+  callNumber,
+  endGame,
 } from './redux/bingoSlice';
 import BingoCard from './components/BingoCard';
 import CalledNumber from './components/CalledNumber';
@@ -13,46 +13,68 @@ import CallHistory from './components/CallHistory';
 import Controls from './components/Controls';
 import GameModal from './components/GameModal';
 import useDarkMode from './hooks/useDarkMode';
+import Lobby from './components/Lobby';
 
+import { socket } from './socket';
 
 export default function App() {
   const dispatch = useDispatch();
   const gameStatus = useSelector(state => state.bingo.gameStatus);
   const audioRef = useRef(null)
-  const winner = useSelector(state => state.bingo.winner);
 
   const [darkMode, setDarkMode] = useDarkMode();
 
-const startNewGame = () => {
-  const card = generateBingoCard();
-  dispatch(resetGame()); // just to be clean
-  dispatch(setPlayerCard(card));
-  dispatch(startGame());
-};
-
-
-  const [modal, setModal] = useState({ visible: false, message: '' });
-  // Call a new number every 5 seconds
   useEffect(() => {
-    if (gameStatus !== 'playing') return;
+    socket.connect();
 
-    const interval = setInterval(() => {
-      dispatch(callNextNumber());
-      if (audioRef.current) {
-        audioRef.current.play().catch(error => {
-          console.error("Audio playback failed:", error);
-        });
-      }
-    }, 5000); // 5 seconds
+    socket.on("connect", () => {
+      console.log("✅ Connected to server:", socket.id);
+    });
 
-    return () => clearInterval(interval);
-  }, [dispatch, gameStatus]);
+    socket.on("joinError", (msg) => {
+      setError(msg);
+    });
 
-  {winner && 
-    <div className="bg-green-100 text-green-800 px-6 py-3 rounded shadow">
-    🎉 {winner.toUpperCase()} wins the game!
-  </div>
-}
+    socket.on('gameStarted', ({yourCard, roomCode}) =>{
+      dispatch(setPlayerCard(yourCard));
+      dispatch(startGame());
+      dispatch(setGameStatus('playing'));
+
+      setTimeout(()=> {
+        socket.emit('callNumber', {roomCode});
+      })
+    })
+
+    socket.on('numberCalled', ({number, allNumbers})=> {
+      dispatch(callNumber(number))
+    })
+
+    socket.on('noMoreNumbers', ()=>{
+      alert("No one one the game.")
+      dispatch(endGame());
+      dispatch(setGameStatus(idle));
+    })
+
+    socket.on('bingoSuccess', ({winner}) =>{
+      alert("Bingo! \n" + winner + " won the game! ")
+    })
+
+    socket.on('bingoFailed', ({message}) =>{
+      alert(message)
+    })
+
+    socket.on("gameStatus", (msg) => {
+    console.log("Game status:", msg); // Optional: Show in UI later
+  });
+
+  return () => {
+    socket.off("gameStarted");
+    socket.off("gameStatus");
+  };
+  }, []);
+
+const [modal, setModal] = useState({ visible: false, message: '' });
+  
 
 return (
   <div className="relative flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4 gap-6 dark:bg-gray-900">
@@ -61,12 +83,7 @@ return (
     <audio ref={audioRef} src="/ding-sound.mp3" preload="auto" />
 
     {gameStatus === 'idle' && (
-      <button
-        onClick={startNewGame}
-        className="bg-green-600 text-white px-6 py-3 rounded-lg shadow hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 transition duration-300 flex items-center gap-2"
-      >
-        Start
-      </button>
+      <Lobby/>
     )}
 
     {gameStatus !== 'idle' && (

@@ -4,11 +4,14 @@ export default function CallHistory() {
   const calledNumbers = useSelector(state => state.bingo.calledNumbers);
 
   // Show last 5 called numbers, most recent first
-  const recent = [...calledNumbers].reverse();
+  const uniqueArray = [...new Set(calledNumbers)];
+
+  const recent = [...uniqueArray].reverse();
+
 
   return (
     <div className="mt-4">
-        <span className="dark:text-white">History</span>
+        <span className="font-bold dark:text-white">History: </span>
         <div className="rounded flex gap-2 flex-wrap max-w-3xs max-h-15 justify-center overflow-y-scroll [&::-webkit-scrollbar]:w-2
   [&::-webkit-scrollbar-track]:rounded-full
   [&::-webkit-scrollbar-track]:bg-gray-100
