@@ -70,6 +70,11 @@ function Lobby({}) {
 
       });
 
+    socket.on('roomNotFound', ({message}) => {
+      console.log(message);
+      alert(message);
+    })
+
       return () =>{
         socket.off('roomCreated');
         socket.off('playerJoined');
