@@ -47,6 +47,13 @@ export default function App() {
 
     socket.on('numberCalled', ({number, allNumbers})=> {
       dispatch(callNumber(number))
+
+      if (audioRef.current) {
+      audioRef.current.currentTime = 0; // Rewind in case it's still playing
+      audioRef.current.play().catch(err => {
+      console.warn("Sound couldn't play:", err);
+    });
+  }
     })
 
     socket.on('noMoreNumbers', ()=>{

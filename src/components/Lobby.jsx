@@ -75,6 +75,11 @@ function Lobby({}) {
       alert(message);
     })
 
+    socket.on('playerLimitExceeded', ({message}) => {
+      console.log(message);
+      alert(message);
+    })
+
       return () =>{
         socket.off('roomCreated');
         socket.off('playerJoined');
