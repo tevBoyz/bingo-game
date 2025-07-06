@@ -56,7 +56,9 @@ export default function App() {
     })
 
     socket.on('bingoSuccess', ({winner}) =>{
-      alert("Bingo! \n" + winner + " won the game! ")
+      alert("Bingo! \n" + winner.toUpperCase() + " won the game! ");
+      dispatch(endGame(winner));
+      console.log("winner:", winner)  
     })
 
     socket.on('bingoFailed', ({message}) =>{

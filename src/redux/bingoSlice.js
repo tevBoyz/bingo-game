@@ -97,7 +97,7 @@ setCurrentPlayer: (state, action) => {
 
     },
 endGame: (state, action) => {
-  state.gameStatus = 'ended';
+  state.gameStatus = 'idle';
   state.winner = action.payload; // "player"
 },
 
