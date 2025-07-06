@@ -77,81 +77,97 @@ function Lobby({}) {
   }, [dispatch]);
 
   return (
-    <div className="p-4 flex flex-col justify-center items-center gap-4 max-w-md mx-auto dark:text-white dark:border-white">
-      <div className="flex gap-5 items-end">
-        <div className="flex flex-col items-center hostDiv gap-2">
-          
+  <div className="p-4 sm:p-6 md:p-8 max-w-3xl mx-auto flex flex-col gap-6 text-gray-900 dark:text-white">
+    {/* Host & Join Section */}
+    <div className="flex flex-col md:flex-row gap-6 justify-between">
+      {/* Host Box */}
+      <div className="flex-1 bg-white dark:bg-gray-800 shadow rounded-xl p-5 flex flex-col gap-4">
+        <h2 className="text-lg font-semibold">Host a Game</h2>
         <input
           placeholder="Enter your name"
           value={hostPlayer}
           onChange={(e) => setHostPlayer(e.target.value)}
-          className="p-2 border-b-2"
+          className="px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
           id="hostName"
         />
         <button
           onClick={handleHost}
-          className="bg-blue-600 text-white px-4 py-2 rounded"
+          className="bg-blue-600 hover:bg-blue-700 text-white py-2 rounded shadow text-center transition"
         >
           Host Game
         </button>
       </div>
 
-      <div className="flex flex-col border-l-2 pl-6 items-center justify-center joinDiv gap-2">
-
+      {/* Join Box */}
+      <div className="flex-1 bg-white dark:bg-gray-800 shadow rounded-xl p-5 flex flex-col gap-4">
+        <h2 className="text-lg font-semibold">Join a Game</h2>
         <input
           placeholder="Enter your name"
           value={joinPlayer}
           onChange={(e) => setJoinPlayer(e.target.value)}
-          className="p-2 border-b-2"
+          className="px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600"
           id="joinName"
         />
-
         <input
-          placeholder="Room code to join"
+          placeholder="Room code"
           value={room}
           onChange={(e) => setRoom(e.target.value)}
-          className="border-b-2 p-2"
+          className="px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600"
           id="roomCodeToJoin"
         />
         <button
           onClick={handleJoin}
-          className="bg-green-600 text-white px-4 py-2 rounded"
+          className="bg-green-600 hover:bg-green-700 text-white py-2 rounded shadow text-center transition"
         >
           Join Game
         </button>
       </div>
-      </div>
-      
-      <div className="max-w-md">
-        <div className="border-b-2 pb-2 flex items-center justify-start gap-2">
-          <code id="roomCodeDisp" className="text-start dark:text-white"> {"Room Code: " + roomCode}</code>
-        {isHost && (
-          <Copy
-          className="cursor-pointer text-blue-600"
-          onClick={() => navigator.clipboard.writeText(roomCode)}
-        />
-        )}
+    </div>
+
+    {/* Room Info & Players */}
+    <div className="bg-white dark:bg-gray-800 shadow rounded-xl p-5 flex flex-col gap-4">
+      {/* Room Code */}
+      <div className="flex items-center justify-between border-b pb-2">
+        <span className="text-sm font-medium">Room Code:</span>
+        <div className="flex items-center gap-2">
+          <code id="roomCodeDisp" className="text-sm">{roomCode || 'N/A'}</code>
+          {isHost && (
+            <Copy
+              className="w-4 h-4 cursor-pointer text-blue-600 hover:text-blue-700"
+              onClick={() => navigator.clipboard.writeText(roomCode)}
+            />
+          )}
         </div>
-        <ol id="playersDisp" className="border-r-2 flex flex-col items-start list-decimal pl-5 mt-2 ">
-          <span className="w-full">Players</span>
+      </div>
+
+      {/* Players List */}
+      <div>
+        <h3 className="text-md font-semibold mb-2">Players:</h3>
+        <ol
+          id="playersDisp"
+          className="list-decimal pl-5 text-sm space-y-1"
+        >
           {players.map((player, index) => (
-            <li key={index} className="py-1">
+            <li key={index}>
               {player.playerName || `Player ${index + 1}`}
             </li>
           ))}
         </ol>
-        {(isHost && players.length >=2) && (
-              <button
-            onClick={handleStartGame}
-            className="mt-4 bg-purple-600 text-white px-4 py-2 rounded w-full"
-          >
-            Start Game
-          </button>
-            )}
-            
       </div>
+
+      {/* Start Game Button */}
+      {isHost && players.length >= 2 && (
+        <button
+          onClick={handleStartGame}
+          className="mt-4 bg-purple-600 hover:bg-purple-700 text-white py-2 rounded w-full transition"
+        >
+          Start Game
+        </button>
+      )}
     </div>
-  );
+  </div>
+);
+
 }
 
 export default Lobby;
