@@ -9,12 +9,12 @@ export default function PlayerList() {
   if (!players || players.length === 0) return null;
 
   return (
-    <div className="w-full max-w-md bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg">
+    <div className="w-[300px] max-w-md bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg">
       <h2 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">
         👥 Players in Room
       </h2>
       <ul className="space-y-2">
-        {players.map((player, index) => (
+        {players.length >= 2 ? (players.map((player, index) => (
           <li
             key={index}
             className="flex items-center justify-between px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded text-gray-900 dark:text-white"
@@ -31,7 +31,7 @@ export default function PlayerList() {
               </span>
             )} */}
           </li>
-        ))}
+        ))) : ('')}
       </ul>
     </div>
   );

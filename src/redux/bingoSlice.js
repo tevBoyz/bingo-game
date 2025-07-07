@@ -29,6 +29,10 @@ export const bingoSlice = createSlice({
       state.gameStatus = action.payload;
     },
     startGame: (state) => {
+      state.currentNumber = null;
+      state.winner = null;
+      state.numberPool = Array.from({ length: 75 }, (_, i) => i + 1);
+
       state.calledNumbers = [];
       state.markedNumbers = [];
     },

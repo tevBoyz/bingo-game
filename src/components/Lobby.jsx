@@ -11,20 +11,32 @@ import {
   setGameStatus,
 } from '../redux/bingoSlice';
 import { useDispatch } from "react-redux";
+import CustomPopup from "./CustomPopup";
+
 
 function Lobby({}) {
   const dispatch = useDispatch();
   const [room, setRoom] = useState('');
   const [hostPlayer, setHostPlayer] = useState('');
   const [joinPlayer, setJoinPlayer] = useState('');
+  const [popup, setPopup] = useState({ visible: false, title: '', message: '', imageUrl: '' });
+
 
   const roomCode = useSelector((state) => state.bingo.roomCode);
   const players = useSelector((state) => state.bingo.players);
   const isHost = useSelector((state) => state.bingo.isHost);
 
+  const isRoom = !!roomCode;
+
   const handleHost = () => {
     if(hostPlayer === ''){
-      alert('Enter Your Name');
+      // alert('Enter Your Name');
+      setPopup({
+        visible: true,
+        title: "Bingo!",
+        message: "Enter Your Name",
+        imageUrl: "/danger.png",
+      });
       document.getElementById('hostName').focus();
     }
     else{
@@ -37,11 +49,23 @@ function Lobby({}) {
   const handleJoin = () => {
     if(joinPlayer === "")
     {
-      alert('Enter Your Name');
+      // alert('Enter Your Name');
+      setPopup({
+        visible: true,
+        title: "Bingo!",
+        message: "Enter Your Name",
+        imageUrl: "/danger.png",
+      });
       document.getElementById('joinName').focus();
     }
     else if(room === ''){
-      alert('Enter Room Code to Join');
+      // alert('Enter Room Code to Join');
+      setPopup({
+        visible: true,
+        title: "Bingo!",
+        message: "Enter Room Code to Join",
+        imageUrl: "/danger.png",
+      });
       document.getElementById('roomCodeToJoin').focus();
     }
     else{
@@ -72,12 +96,23 @@ function Lobby({}) {
 
     socket.on('roomNotFound', ({message}) => {
       console.log(message);
-      alert(message);
+      //alert(message);
+      setPopup({
+        visible: true,
+        title: "Bingo!",
+        message: message,
+        imageUrl: "/danger.png",
+      });
     })
 
     socket.on('playerLimitExceeded', ({message}) => {
-      console.log(message);
-      alert(message);
+      // alert(message);
+      setPopup({
+        visible: true,
+        title: "Bingo!",
+        message: message,
+        imageUrl: "/danger.png",
+      });
     })
 
       return () =>{
@@ -102,7 +137,8 @@ function Lobby({}) {
         />
         <button
           onClick={handleHost}
-          className="bg-blue-600 hover:bg-blue-700 text-white py-2 rounded shadow text-center transition"
+          disabled={isRoom}
+          className={`bg-blue-600 hover:bg-blue-700 text-white py-2 rounded shadow text-center transition ${isRoom ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'}`}
         >
           Host Game
         </button>
@@ -127,7 +163,8 @@ function Lobby({}) {
         />
         <button
           onClick={handleJoin}
-          className="bg-green-600 hover:bg-green-700 text-white py-2 rounded shadow text-center transition"
+          disabled={isRoom}
+          className={`bg-green-600 hover:bg-green-700 text-white py-2 rounded shadow text-center transition ${isRoom ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-700'}`}
         >
           Join Game
         </button>
@@ -140,7 +177,7 @@ function Lobby({}) {
       <div className="flex items-center justify-between border-b pb-2">
         <span className="text-sm font-medium">Room Code:</span>
         <div className="flex items-center gap-2">
-          <code id="roomCodeDisp" className="text-sm">{roomCode || 'N/A'}</code>
+          <code id="roomCodeDisp" className="text-lg md:text-md sm:text=sm">{roomCode || 'Host a room to begin'}</code>
           {isHost && (
             <Copy
               className="w-4 h-4 cursor-pointer text-blue-600 hover:text-blue-700"
@@ -175,6 +212,15 @@ function Lobby({}) {
         </button>
       )}
     </div>
+
+    {popup.visible && (
+  <CustomPopup
+    title={popup.title}
+    message={popup.message}
+    imageUrl={popup.imageUrl}
+    onClose={() => setPopup({ ...popup, visible: false })}
+  />
+)}
   </div>
 );
 

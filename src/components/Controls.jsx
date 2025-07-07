@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { socket } from '../socket';
-import { endGame, quitGame } from '../redux/bingoSlice';
+import { endGame, quitGame, resetGame, setGameStatus } from '../redux/bingoSlice';
 
 
 export default function Controls({showModal}) {
@@ -15,11 +15,10 @@ export default function Controls({showModal}) {
   };
 
   const handleQuit = () => {
-    if(isHost){
-      dispatch(quitGame());
-      dispatch(setGameStatus('idle'));
-    }
-    window.location.reload();
+    dispatch(resetGame());
+    dispatch(setGameStatus('idle'));
+    socket.emit('quitGame', {roomCode: roomCode});
+    console.log(roomCode)
   }
 
  
