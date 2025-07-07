@@ -111,6 +111,16 @@ resetGame: (state) => {
   state.numberPool = Array.from({ length: 75 }, (_, i) => i + 1);
 },
 
+quitGame: (state) => {
+  state.playerCard = [];
+  state.calledNumbers = [];
+  state.currentNumber = null;
+  state.markedNumbers = [];
+  state.gameStatus = 'idle';
+  state.winner = null;
+  state.numberPool = Array.from({ length: 75 }, (_, i) => i + 1);
+},
+
 
   },
 });
@@ -118,6 +128,6 @@ resetGame: (state) => {
 export const { startGame, setPlayerCard, callNumber, markNumber, callNextNumber, endGame, resetGame,addPlayer,
   updatePlayer,
   removePlayer,
-  setPlayers, setRoomCode, setCurrentPlayer, setIsHost, setGameStatus} = bingoSlice.actions;
+  setPlayers, setRoomCode, setCurrentPlayer, setIsHost, setGameStatus, quitGame} = bingoSlice.actions;
 
 export default bingoSlice.reducer;

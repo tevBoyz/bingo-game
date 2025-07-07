@@ -6,6 +6,8 @@ import {
   setGameStatus,
   callNumber,
   endGame,
+  setPlayers,
+  quitGame,
 } from './redux/bingoSlice';
 import BingoCard from './components/BingoCard';
 import CalledNumber from './components/CalledNumber';
@@ -14,12 +16,14 @@ import Controls from './components/Controls';
 import GameModal from './components/GameModal';
 import useDarkMode from './hooks/useDarkMode';
 import Lobby from './components/Lobby';
+import PlayersList from './components/playersList'
 
 import { socket } from './socket';
 
 export default function App() {
   const dispatch = useDispatch();
   const gameStatus = useSelector(state => state.bingo.gameStatus);
+  const players= useSelector(state => state.bingo.players);
   const audioRef = useRef(null)
 
   const [darkMode, setDarkMode] = useDarkMode();
@@ -46,7 +50,7 @@ export default function App() {
     })
 
     socket.on('numberCalled', ({number, allNumbers})=> {
-      dispatch(callNumber(number))
+        dispatch(callNumber(number))
 
       if (audioRef.current) {
       audioRef.current.currentTime = 0; // Rewind in case it's still playing
@@ -54,7 +58,8 @@ export default function App() {
       console.warn("Sound couldn't play:", err);
     });
   }
-    })
+      
+    });
 
     socket.on('noMoreNumbers', ()=>{
       alert("No one one the game.")
@@ -70,6 +75,15 @@ export default function App() {
 
     socket.on('bingoFailed', ({message}) =>{
       alert(message)
+    })
+
+    socket.on('playerLeft', ({playerName, players})=>{
+      alert(playerName + " left the game.")
+      if(players.length < 2){
+        dispatch(quitGame());
+        console.log("ended game since players count is less than 2")
+      }
+      dispatch(setPlayers(players))
     })
 
     socket.on("gameStatus", (msg) => {
@@ -101,6 +115,7 @@ return (
         <BingoCard />
         <Controls showModal={setModal} />
         <CallHistory />
+        <PlayersList/>
 
       </>
     )}
@@ -116,7 +131,7 @@ return (
         onClick={() => setDarkMode(!darkMode)}
         className="px-4 py-2 rounded bg-gray-200 dark:bg-gray-700 dark:text-white"
       >
-        {darkMode ? '☀️ Light Mode' : '🌙 Dark Mode'}
+        {darkMode ? '☀️' : '🌙'}
       </button>
 </div>
   </div>
