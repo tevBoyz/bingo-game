@@ -33,7 +33,7 @@ export default function BingoCard() {
   return (
     <div className="grid grid-cols-5 gap-1 w-[300px] text-center">
       {['B', 'I', 'N', 'G', 'O'].map(letter => (
-        <div key={letter} className="font-bold text-lg dark:text-white">{letter}</div>
+        <div key={letter} className="bg-green-400 w-full rounded-2xl text-center font-bold text-lg dark:text-white">{letter}</div>
       ))}
 
       {card.flat().map((num, idx) => (

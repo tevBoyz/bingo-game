@@ -83,11 +83,11 @@ export default function App() {
       setPopup({
         visible: true,
         title: "Bingo!",
-        message: message,
+        message: 'No more numbers to call. Game ended',
         imageUrl: "/danger.png",
       });
       dispatch(endGame());
-      dispatch(setGameStatus(idle));
+      dispatch(setGameStatus('idle'));
     })
 
     socket.on('bingoSuccess', ({winner}) =>{
@@ -119,7 +119,7 @@ export default function App() {
         visible: true,
         title: "Bingo game!",
         message: playerName.toUpperCase() + " has left the game. \n" + "Game ended, Players count is less than minimum.",
-        imageUrl: "./public/danger.png",
+        imageUrl: "/danger.png",
       });
 
         dispatch(quitGame());
@@ -158,7 +158,7 @@ const [modal, setModal] = useState({ visible: false, message: '' });
 
 return (
   <div className="relative flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4 gap-6 dark:bg-gray-900">
-    <h1 className="text-3xl font-bold dark:text-white">Bingo!</h1>
+    <h1 className="text-3xl text-green-400 font-bold dark:text-white">Bingo!</h1>
 
     <audio ref={audioRef} src="/ding-sound.mp3" preload="auto" />
 

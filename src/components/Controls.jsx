@@ -23,18 +23,18 @@ export default function Controls({showModal}) {
 
  
   return (
-    <div>
+    <div className='flex gap-2 items-center'>
         <button
       onClick={handleBingoClick}
-      className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded shadow dark:bg-green-700 dark:hover:bg-green-800"
+      className=" bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded shadow dark:bg-green-700 dark:hover:bg-green-800"
     >
       🏆 Bingo!
     </button>
     <button
       onClick={handleQuit}
-      className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded shadow dark:bg-red-700 dark:hover:bg-red-800 ml-4"
+      className=" bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded shadow dark:bg-red-700 dark:hover:bg-red-800 ml-4"
     >
-      🔁 Quit Game
+      🔁 Exit
     </button>
     </div>
     
